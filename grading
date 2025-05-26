@@ -1,0 +1,111 @@
+# Calculates grades based on exercises completed and exam result, shows summary
+def grade(all_points):
+    length = len(all_points)
+    results = []
+    for i in range(0, length):
+        numbers = all_points[i].split()
+        exam_points = int(numbers[0])
+        exercises = int(numbers[1])
+
+        exercise_points = (exercises // 10) #get full 10s and round down
+        total = exercise_points + exam_points
+
+        if exam_points < 10:
+            results.append(0)
+        elif total <= 14:
+            results.append(0)
+        elif total > 14 and total <= 17:
+            results.append(1)
+        elif total >17 and total <=20:
+            results.append(2)
+        elif total > 20 and total <= 23:
+            results.append(3)
+        elif total > 23 and total <= 27:
+            results.append(4)
+        elif total > 27 and total <=30:
+            results.append(5)
+    #print(results) to test grade function
+    return results
+
+def avg(all_points):
+    length = len(all_points)
+    results = []
+    for i in range(0, length):
+        numbers = all_points[i].split()
+        exam_points = int(numbers[0])
+        exercises = int(numbers[1])
+
+        exercise_points = (exercises // 10) #get full 10s and round down
+        total = exercise_points + exam_points
+        results.append(total)
+    
+    average = sum(results)/len(results)
+    return average
+
+def passes(results):
+    length = len(results)
+    count = 0
+    for i in range(0, length):
+        if results[i] != 0:
+            count = count + 1
+    perc = float(count/length*100)
+    return perc
+
+def count(results):
+    fives = results.count(5)
+    fours = results.count(4)
+    threes = results.count(3)
+    twos = results.count(2)
+    ones = results.count(1)
+    fails = results.count(0)
+
+    results_list = [fives, fours, threes, twos, ones, fails]
+
+    return results_list
+
+
+def main():
+    all_points = []
+    while True:
+        points = input("Exam points and exercises completed: ")
+        if points == "":
+            #print(all_points) for testing
+            break
+        all_points.append(points)
+
+    res = grade(all_points)
+
+    print("Statistics:")
+
+    total_points = avg(all_points)
+    formatted_avg = f"{total_points:.1f}"
+
+    print(f"Points average: {formatted_avg}")
+
+    percentage = passes(res)
+    formatted_perc = f"{percentage:.1f}"
+
+    print(f"Pass percentage: {formatted_perc}")
+    print("Grade distribution: ")
+
+    res_list = count(res)
+
+    print("5: " + res_list[0]*"*")
+    print("4: " + res_list[1]*"*")
+    print("3: " + res_list[2]*"*")
+    print("2: " + res_list[3]*"*")
+    print("1: " + res_list[4]*"*")
+    print("0: " + res_list[5]*"*")
+
+
+
+
+
+
+    
+
+
+
+
+main()
+
