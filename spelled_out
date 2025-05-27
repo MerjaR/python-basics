@@ -1,0 +1,81 @@
+def dict_of_numbers():
+    thedictionary = {}
+    spelled_out = {}
+    spelled_out[0] = "zero"
+    spelled_out[1] = "one"
+    spelled_out[2] = "two"
+    spelled_out[3] = "three"
+    spelled_out[4] = "four"
+    spelled_out[5] = "five"
+    spelled_out[6] = "six"
+    spelled_out[7] = "seven"
+    spelled_out[8] = "eight"
+    spelled_out[9] = "nine"
+    spelled_out[10] = "ten"
+    spelled_out[11] = "eleven"
+    spelled_out[12] = "twelve"
+    spelled_out[13] = "thirteen"
+    spelled_out[14] = "fourteen"
+    spelled_out[15] = "fifteen"
+    spelled_out[18] = "eighteen"
+
+    for i in range(0, 100):
+        if i < 16:
+            thedictionary[i] = spelled_out[i]
+        if i >= 16 and i < 20:
+            if i == 18:
+                thedictionary[i] =spelled_out[18]
+            else:
+                number = spelled_out[i-10] + "teen"
+                thedictionary[i] = number
+        if i >= 20 and i <30:
+            number = "twenty"
+            if i > 20:
+                number = number + "-" + spelled_out[i-20]
+            thedictionary[i] = number
+        if i >= 30 and i <40:
+            number = "thirty"
+            if i > 30:
+                number = number + "-" + spelled_out[i-30]
+            thedictionary[i] = number
+        if i >= 40 and i <50:
+            number = "forty"
+            if i > 40:
+                number = number + "-" + spelled_out[i-40]
+            thedictionary[i] = number
+        if i >= 50 and i <60:
+            number = "fifty"
+            if i > 50:
+                number = number + "-" + spelled_out[i-50]
+            thedictionary[i] = number
+        if i >= 60 and i <70:
+            number = "sixty"
+            if i > 60:
+                number = number + "-" + spelled_out[i-60]
+            thedictionary[i] = number
+        if i >= 70 and i <80:
+            number = "seventy"
+            if i > 70:
+                number = number + "-" + spelled_out[i-70]
+            thedictionary[i] = number
+        if i >= 80 and i <90:
+            number = "eighty"
+            if i > 80:
+                number = number + "-" + spelled_out[i-80]
+            thedictionary[i] = number
+        if i >= 90 and i <100:
+            number = "ninety"
+            if i > 90:
+                number = number + "-" + spelled_out[i-90]
+            thedictionary[i] = number
+    return thedictionary
+
+
+# Testing
+if __name__ == "__main__":
+    numbers = dict_of_numbers()
+    print(numbers[2])
+    print(numbers[11])
+    print(numbers[45])
+    print(numbers[99])
+    print(numbers[0])
