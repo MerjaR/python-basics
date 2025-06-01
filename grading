@@ -1,111 +1,113 @@
-# Calculates grades based on exercises completed and exam result, shows summary
-def grade(all_points):
-    length = len(all_points)
-    results = []
-    for i in range(0, length):
-        numbers = all_points[i].split()
-        exam_points = int(numbers[0])
-        exercises = int(numbers[1])
+# Student grading based on exam and exercise results. Prints results in txt and csv files.
+file1 = input("Student information: ")
+file2 = input("Exercises completed: ")
+file3 = input("Exam points: ")
+file4 = input("Course information: ")
 
-        exercise_points = (exercises // 10) #get full 10s and round down
-        total = exercise_points + exam_points
+students = {}
 
-        if exam_points < 10:
-            results.append(0)
-        elif total <= 14:
-            results.append(0)
-        elif total > 14 and total <= 17:
-            results.append(1)
-        elif total >17 and total <=20:
-            results.append(2)
-        elif total > 20 and total <= 23:
-            results.append(3)
-        elif total > 23 and total <= 27:
-            results.append(4)
-        elif total > 27 and total <=30:
-            results.append(5)
-    #print(results) to test grade function
-    return results
+with open(file1) as f:
+    for line in f:
+        line = line.strip()
+        parts = line.split(";")
+        if parts[0] == "id":
+            continue
+        student_id = parts[0]
+        name = parts[1] + " " + parts[2]
+        students[student_id] = {"name": name, "total": 0}
 
-def avg(all_points):
-    length = len(all_points)
-    results = []
-    for i in range(0, length):
-        numbers = all_points[i].split()
-        exam_points = int(numbers[0])
-        exercises = int(numbers[1])
+with open(file2) as f:
+    for line in f:
+        line = line.strip()
+        parts = line.split(";")
+        if parts[0] == "id":
+            continue
+        student_id = parts[0]
+        exercises = list(map(int, parts[1:]))
+        total_exercises = sum(exercises)
+        max_exercises = 40
+        exercise_points = (total_exercises * 100) // max_exercises // 10
+        if student_id in students:
+            students[student_id]["total"] = total_exercises
+            students[student_id]["ex_points"] = exercise_points
 
-        exercise_points = (exercises // 10) #get full 10s and round down
-        total = exercise_points + exam_points
-        results.append(total)
+
+with open(file3) as f:
+    for line in f:
+        line = line.strip()
+        parts = line.split(";")
+        if parts[0] == "id":
+            continue
+        student_id = parts[0]
+        exam_points = list(map(int, parts[1:]))
+        total_exam = sum(exam_points)
+        if student_id in students:
+            students[student_id]["total_exam"] = total_exam
+
+
+
+for student_id in students:
+    name = students[student_id]["name"]
+    total = students[student_id]["total"]
+    grade = 0
+
+for student_id in students:
+    grade_points = students[student_id]["total_exam"] + students[student_id]["ex_points"]
+    if grade_points >= 0 and grade_points < 15:
+        grade = 0
+    elif grade_points > 14 and grade_points < 18:
+        grade = 1
+    elif grade_points > 17 and grade_points < 21:
+        grade = 2
+    elif grade_points > 20 and grade_points < 24:
+        grade = 3
+    elif grade_points > 23 and grade_points < 28:
+        grade = 4
+    elif grade_points > 27:
+        grade = 5
     
-    average = sum(results)/len(results)
-    return average
+    students[student_id]["grade"] = grade
 
-def passes(results):
-    length = len(results)
-    count = 0
-    for i in range(0, length):
-        if results[i] != 0:
-            count = count + 1
-    perc = float(count/length*100)
-    return perc
+with open("results.csv", "w") as csv_file:
+    for student_id in students:
+        name = students[student_id]["name"]
+        grade = students[student_id]["grade"]
+        csv_file.write(f"{student_id};{name};{grade}\n")
 
-def count(results):
-    fives = results.count(5)
-    fours = results.count(4)
-    threes = results.count(3)
-    twos = results.count(2)
-    ones = results.count(1)
-    fails = results.count(0)
+    #print(students[student_id]["name"] + " " + str(students[student_id]["grade"]))
 
-    results_list = [fives, fours, threes, twos, ones, fails]
+with open(file4) as file:
+    lines = [line.strip() for line in file if line.strip()]
 
-    return results_list
-
-
-def main():
-    all_points = []
-    while True:
-        points = input("Exam points and exercises completed: ")
-        if points == "":
-            #print(all_points) for testing
-            break
-        all_points.append(points)
-
-    res = grade(all_points)
-
-    print("Statistics:")
-
-    total_points = avg(all_points)
-    formatted_avg = f"{total_points:.1f}"
-
-    print(f"Points average: {formatted_avg}")
-
-    percentage = passes(res)
-    formatted_perc = f"{percentage:.1f}"
-
-    print(f"Pass percentage: {formatted_perc}")
-    print("Grade distribution: ")
-
-    res_list = count(res)
-
-    print("5: " + res_list[0]*"*")
-    print("4: " + res_list[1]*"*")
-    print("3: " + res_list[2]*"*")
-    print("2: " + res_list[3]*"*")
-    print("1: " + res_list[4]*"*")
-    print("0: " + res_list[5]*"*")
-
-
-
-
-
-
+for line in lines:
+    if line.startswith("name"):
+        course_name = line.replace("name:", "").strip()
+    elif line.startswith("study credits:"):
+        credit = int(line.replace("study credits:", "").strip())
     
 
+printout = course_name + ", " + str(credit) + " credits"
 
+length = len(printout)
 
+emphasis = length * "="
 
-main()
+with open("results.txt", "w") as out_file:
+    out_file.write(printout + "\n")
+    out_file.write(emphasis + "\n")
+    
+    out_file.write(f"{'name':30}{'exec_nbr':10}{'exec_pts.':10}{'exm_pts.':10}{'tot_pts.':10}{'grade':10}\n")
+
+    for student_id in students:
+        name = students[student_id]["name"]
+        exec_nbr = students[student_id]["total"]
+        ex_points = students[student_id]["ex_points"]
+        exm_points = students[student_id]["total_exam"]
+        total = ex_points + exm_points
+        grade = students[student_id]["grade"]
+
+        out_file.write(f"{name:<30}{exec_nbr:<10}{ex_points:<10}{exm_points:<10}{total:<10}{grade:<10}\n")
+
+    print("Results written to files results.txt and results.csv")
+    
 
